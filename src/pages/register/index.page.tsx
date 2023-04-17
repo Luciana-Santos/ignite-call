@@ -1,8 +1,39 @@
 import { Heading, MultiStep, Text, TextInput, Button } from '@ignite-ui/react'
-import { Container, Form, Header } from './styles'
+import { Container, Form, FormError, Header } from './styles'
 import { ArrowRight } from 'phosphor-react'
 
+import { z } from 'zod'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+
+const registerFormSchema = z.object({
+  username: z
+    .string()
+    .min(3, { message: 'O usuário precisa ter pelo menos 3 letras.' })
+    .regex(/^([a-z\\-]+)$/i, {
+      message: 'O usuário pode ter apenas letras e hifens.',
+    })
+    .transform((username) => username.toLowerCase()),
+  name: z
+    .string()
+    .min(3, { message: 'O nome precisa ter pelo menos 3 letras.' }),
+})
+
+type registerFormData = z.infer<typeof registerFormSchema>
+
 export default function Register() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    resolver: zodResolver(registerFormSchema),
+  })
+
+  const handleRegister = async (data: registerFormData) => {
+    console.log(data)
+  }
+
   return (
     <Container>
       <Header>
@@ -15,15 +46,25 @@ export default function Register() {
         <MultiStep size={4} currentStep={1} />
       </Header>
 
-      <Form as="form">
+      <Form as="form" onSubmit={handleSubmit(handleRegister)}>
         <label>
           <Text size="sm">Nome de usuário</Text>
-          <TextInput prefix="ignite.com" placeholder="seu-usuário" />
+          <TextInput
+            prefix="ignite.com/"
+            placeholder="seu-usuário"
+            {...register('username')}
+          />
+          {errors.username && (
+            <FormError size="sm">{errors.username.message}</FormError>
+          )}
         </label>
 
         <label>
           <Text size="sm">Nome completo</Text>
-          <TextInput placeholder="Seu bine" />
+          <TextInput placeholder="Seu bine" {...register('name')} />
+          {errors.username && (
+            <FormError size="sm">{errors.name.message}</FormError>
+          )}
         </label>
 
         <Button type="submit">
