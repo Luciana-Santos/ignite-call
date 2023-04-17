@@ -1,6 +1,7 @@
 import { Heading, MultiStep, Text, TextInput, Button } from '@ignite-ui/react'
 import { Container, Form, FormError, Header } from './styles'
 import { ArrowRight } from 'phosphor-react'
+import { AxiosError } from 'axios'
 
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
@@ -49,6 +50,11 @@ export default function Register() {
         username: data.username,
       })
     } catch (err) {
+      if (err instanceof AxiosError && err?.response?.data?.message) {
+        alert(err.response.data.message)
+        return
+      }
+
       console.log(err)
     }
   }
