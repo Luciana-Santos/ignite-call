@@ -1,14 +1,14 @@
-import { Heading, MultiStep, Text, TextInput, Button } from '@ignite-ui/react'
-import { Container, Form, FormError, Header } from './styles'
-import { ArrowRight } from 'phosphor-react'
+import { Button, Heading, MultiStep, Text, TextInput } from '@ignite-ui/react'
 import { AxiosError } from 'axios'
+import { ArrowRight } from 'phosphor-react'
+import { Container, Form, FormError, Header } from './styles'
 
-import { z } from 'zod'
-import { useForm } from 'react-hook-form'
+import { api } from '@/lib/axios'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
-import { api } from '@/lib/axios'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
 
 const registerFormSchema = z.object({
   username: z
@@ -49,6 +49,8 @@ export default function Register() {
         name: data.name,
         username: data.username,
       })
+
+      await router.push('/register/connect-calendar')
     } catch (err) {
       if (err instanceof AxiosError && err?.response?.data?.message) {
         alert(err.response.data.message)
@@ -92,7 +94,7 @@ export default function Register() {
           )}
         </label>
 
-        <Button type="submit">
+        <Button type="submit" disabled={isSubmitting}>
           Próximo passo <ArrowRight />
         </Button>
       </Form>
