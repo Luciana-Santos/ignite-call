@@ -88,7 +88,7 @@ export default function Register() {
 
         <label>
           <Text size="sm">Nome completo</Text>
-          <TextInput placeholder="Seu bine" {...register('name')} />
+          <TextInput placeholder="Seu nome" {...register('name')} />
           {errors.username && (
             <FormError size="sm">{errors.name.message}</FormError>
           )}
