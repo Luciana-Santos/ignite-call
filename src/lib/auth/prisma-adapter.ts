@@ -3,7 +3,6 @@ import { Adapter } from 'next-auth/adapters'
 import { destroyCookie, parseCookies } from 'nookies'
 import { prisma } from '../prisma'
 
-/** @return { import("next-auth/adapters").Adapter } */
 export function PrismaAdapter(
   req: NextApiRequest,
   res: NextApiResponse
@@ -61,7 +60,6 @@ export function PrismaAdapter(
         avatar_url: user.avatar_url!,
       }
     },
-
     async getUserByEmail(email) {
       const user = await prisma.user.findUnique({
         where: {
@@ -82,7 +80,6 @@ export function PrismaAdapter(
         avatar_url: user.avatar_url!,
       }
     },
-
     async getUserByAccount({ providerAccountId, provider }) {
       const account = await prisma.account.findUnique({
         where: {
@@ -160,6 +157,7 @@ export function PrismaAdapter(
           session_token: sessionToken,
         },
       })
+
       return {
         userId,
         sessionToken,
@@ -187,7 +185,7 @@ export function PrismaAdapter(
         session: {
           userId: session.user_id,
           expires: session.expires,
-          sessionToken: session.access_token,
+          sessionToken: session.session_token,
         },
         user: {
           id: user.id,
